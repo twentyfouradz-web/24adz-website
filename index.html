@@ -470,6 +470,35 @@ hr{border:0;border-top:1px solid #333;margin:18px 0}
 </section>
 
 
+
+
+
+<section class="section" id="vipListings">
+  <div class="section-heading">
+    <div>
+      <h2>⭐ Featured <span>Ads</span></h2>
+      <div class="section-sub">Featured demo ads appear here. Real VIP placement requires verified payment.</div>
+    </div>
+  </div>
+  <div id="vipGrid" class="ad-grid"></div>
+</section>
+
+<section class="section" id="adResultsSection">
+  <div class="section-heading">
+    <div>
+      <h2 id="adResultsTitle">Ads <span>Listings</span></h2>
+      <div class="section-sub" id="adResultsSubtitle">Browse listings or choose a category and district to narrow the results.</div>
+    </div>
+  </div>
+  <div id="adsGrid" class="ad-grid"></div>
+  <div id="emptyState" class="empty hidden">
+    <div style="font-size:32px;margin-bottom:8px">🔎</div>
+    <strong>No listings found</strong>
+    <p>Try changing your search or filters.</p>
+    <button class="btn btn-orange" onclick="clearFilters()">Clear Filters</button>
+  </div>
+</section>
+
 <section class="section district-directory-section" id="districtDirectory">
   <div class="section-heading">
     <div>
@@ -516,33 +545,6 @@ hr{border:0;border-top:1px solid #333;margin:18px 0}
 <article class="district-directory-card"><h3>Vellore</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
 <article class="district-directory-card"><h3>Viluppuram</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
 <article class="district-directory-card"><h3>Virudhunagar</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-  </div>
-</section>
-
-
-<section class="section" id="vipListings">
-  <div class="section-heading">
-    <div>
-      <h2>⭐ Featured <span>Ads</span></h2>
-      <div class="section-sub">Featured demo ads appear here. Real VIP placement requires verified payment.</div>
-    </div>
-  </div>
-  <div id="vipGrid" class="ad-grid"></div>
-</section>
-
-<section class="section">
-  <div class="section-heading">
-    <div>
-      <h2>Demo <span>Ads</span></h2>
-      <div class="section-sub">25 sample ads across all 6 categories. These are demo listings, not real offers.</div>
-    </div>
-  </div>
-  <div id="adsGrid" class="ad-grid"></div>
-  <div id="emptyState" class="empty hidden">
-    <div style="font-size:32px;margin-bottom:8px">🔎</div>
-    <strong>No listings found</strong>
-    <p>Try changing your search or filters.</p>
-    <button class="btn btn-orange" onclick="clearFilters()">Clear Filters</button>
   </div>
 </section>
 
@@ -1031,35 +1033,26 @@ function clearFilters(){
   renderAds();
 }
 function chooseCategory(category,openForm){
-  if(openForm){
-    openPostForm(category);
-    return;
-  }
-  const categoryFilter=document.getElementById("filterCategory");
-  if(!categoryFilter) return;
-  categoryFilter.value=category;
+  if(openForm){ openPostForm(category); return; }
+  document.getElementById("filterCategory").value=category;
   document.getElementById("searchInput").value="";
   document.getElementById("filterDistrict").value="";
   updateFilterAreas();
   document.getElementById("filterArea").value="";
-  document.querySelectorAll(".category").forEach(el=>el.classList.remove("active"));
-  const match=[...document.querySelectorAll(".category")].find(el=>el.textContent.includes(category));
-  if(match)match.classList.add("active");
+  document.querySelectorAll(".category").forEach(el=>el.classList.toggle("active",el.textContent.includes(category)));
   renderAds();
-  document.getElementById("adsGrid").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("adResultsSection").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
-
 function filterDistrictCategory(district,category){
-  const districtSelect=document.getElementById("filterDistrict");
-  const categorySelect=document.getElementById("filterCategory");
   document.getElementById("searchInput").value="";
-  districtSelect.value=district;
-  categorySelect.value=category;
+  document.getElementById("filterDistrict").value=district;
+  document.getElementById("filterCategory").value=category;
   updateFilterAreas();
   document.getElementById("filterArea").value="";
+  document.querySelectorAll(".category").forEach(el=>el.classList.toggle("active",el.textContent.includes(category)));
   renderAds();
-  document.getElementById("listings").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("adResultsSection").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function renderCard(ad){
@@ -1124,21 +1117,33 @@ function renderAds(){
   const category=document.getElementById("filterCategory").value;
   const district=document.getElementById("filterDistrict").value;
   const area=document.getElementById("filterArea").value;
+  const norm=value=>String(value||"").trim().toLowerCase().replace(/\s+/g," ");
 
   const filtered=all.filter(ad=>{
     const text=[ad.title,ad.category,ad.district,ad.area,ad.description].join(" ").toLowerCase();
-    return (!q||text.includes(q))&&(!category||ad.category===category)&&
-      (!district||ad.district===district)&&(!area||ad.area===area);
+    return (!q||text.includes(q)) && (!category||norm(ad.category)===norm(category)) &&
+      (!district||norm(ad.district)===norm(district)) && (!area||norm(ad.area)===norm(area));
   });
 
+  const hasSpecificFilter=!!(q||category||district||area);
   const vip=filtered.filter(ad=>ad.vip);
   const regular=filtered.filter(ad=>!ad.vip);
-  const categorySelected=!!category;
   const vipSection=document.getElementById("vipListings");
+  const title=document.getElementById("adResultsTitle");
+  const subtitle=document.getElementById("adResultsSubtitle");
+  const parts=[];
+  if(category) parts.push(category==="House"?"Houses":category);
+  if(district) parts.push(district);
+  if(area) parts.push(area);
+  if(q) parts.push('Search: "'+q+'"');
+  title.innerHTML=hasSpecificFilter ? 'Matching <span>Ads</span>' : 'Latest <span>Ads</span>';
+  subtitle.textContent=hasSpecificFilter
+    ? (parts.join(" · ")+" — "+filtered.length+" matching listing(s). Demo listings are samples; real ads appear only when posted.")
+    : "Browse all listings. Demo listings are samples, not real offers.";
 
-  // When a category is selected, show every matching ad together in one list.
-  // This prevents VIP/Featured cars from being separated from other car ads.
-  if(categorySelected){
+  // If the visitor has selected any filter, show only matching ads together.
+  // This keeps district + category results accurate and prevents unrelated ads mixing in.
+  if(hasSpecificFilter){
     vipSection.classList.add("hidden");
     document.getElementById("vipGrid").innerHTML="";
     document.getElementById("adsGrid").innerHTML=filtered.map(renderCard).join("");
@@ -1146,11 +1151,12 @@ function renderAds(){
     vipSection.classList.remove("hidden");
     document.getElementById("vipGrid").innerHTML=vip.length
       ?vip.map(renderCard).join("")
-      :'<div class="empty" style="grid-column:1/-1">No Featured listings available for these filters.</div>';
+      :'<div class="empty" style="grid-column:1/-1">No Featured listings available.</div>';
     document.getElementById("adsGrid").innerHTML=regular.map(renderCard).join("");
   }
   document.getElementById("emptyState").classList.toggle("hidden",filtered.length>0);
 }
+
 const categoryFieldConfig={
   "Cars":[
     {id:"vehicleBrand",label:"BRAND *",placeholder:"e.g. Maruti Suzuki",required:true},
