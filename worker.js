@@ -474,10 +474,12 @@ export default {
         });
       }
 
-      return json({
+            return json({
         success: false,
         message: "API endpoint not found"
-      }, 404);    } catch (error) {
+      }, 404);
+
+    } catch (error) {
       console.error("24Adz API Error:", error);
 
       return json({
