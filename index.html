@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#6A1B9A">
+<meta name="theme-color" content="#080808">
 <meta name="description" content="24Adz.com - Tamil Nadu classified ads for cars, bikes, houses, mobiles, jobs and house movers.">
 <title>24Adz.com | Tamil Nadu Classifieds</title>
 
 <style>
 :root{
-  --bg:#16091f;
-  --panel:#24102f;
-  --panel2:#321541;
+  --bg:#080808;
+  --panel:#151515;
+  --panel2:#222222;
   --orange:#ff7900;
   --gold:#ffffff;
   --white:#ffffff;
-  --muted:#e4d8eb;
-  --border:#63377a;
+  --muted:#d4d4d4;
+  --border:#3b3b3b;
   --green:#20c866;
   --red:#ff4141;
 }
@@ -129,6 +129,19 @@ a{color:inherit;text-decoration:none}
   display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;
   gap:10px;background:var(--panel);border:1px solid #333;
   border-radius:13px;padding:14px
+}
+.filters-collapsible{display:block}
+.search-filter-row{display:flex;align-items:end;gap:10px}
+.search-keyword-field{flex:1;min-width:0}
+.filter-toggle{min-width:112px;height:45px;white-space:nowrap;border:1px solid #444}
+.extra-filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #333}
+.extra-filters .filter-actions{grid-column:1/-1;display:flex;justify-content:flex-end;align-items:stretch}
+.extra-filters .filter-actions .btn{min-width:120px}
+@media(max-width:560px){
+  .search-filter-row{align-items:end;gap:8px}
+  .filter-toggle{min-width:96px;padding:11px 9px;font-size:13px}
+  .extra-filters{grid-template-columns:1fr}
+  .extra-filters .filter-actions{display:grid;grid-template-columns:1fr 1fr}
 }
 .field label{
   display:block;font-size:11px;font-weight:800;
@@ -344,7 +357,7 @@ hr{border:0;border-top:1px solid #333;margin:18px 0}
 
 
 /* 24Adz Kathiri Poo Purple + Orange + White premium theme */
-:root{--bg:#16091f;--panel:#24102f;--panel2:#321541;--orange:#ff7900;--gold:#ffffff;--white:#ffffff;--muted:#e4d8eb;--border:#63377a;}
+:root{--bg:#080808;--panel:#151515;--panel2:#222222;--orange:#ff7900;--gold:#ffffff;--white:#ffffff;--muted:#d4d4d4;--border:#3b3b3b;}
 body{background:var(--bg);color:#fff}
 .topbar{background:#210d2b;border-bottom-color:#6a3a80}
 .hero{background:radial-gradient(ellipse at 15% 10%,#6a1b9a 0,transparent 43%),radial-gradient(ellipse at 90% 100%,#ff790033 0,transparent 42%),linear-gradient(135deg,#321541,#16091f 72%);border-bottom-color:#63377a}
@@ -503,7 +516,7 @@ footer{background:#000;border-top-color:#333}
   <div class="container hero-content">
     <div class="hero-label">TAMIL NADU'S CLASSIFIED MARKETPLACE</div>
     <h1 class="boss-hero-title">24Adz.com</h1>
-    <p class="boss-hero-subtitle tamil-coming-soon">விரைவில்<br>வருகிறோம்</p>
+    <p class="boss-hero-subtitle tamil-coming-soon">COMING SOON<br><span style="display:inline-block;margin-top:8px;font-size:.48em;letter-spacing:2px;color:#ff7900;-webkit-text-fill-color:#ff7900">24Adz.com · CONNECTING SOON</span></p>
     <button class="btn btn-orange post-main" onclick="openPostForm()">
       ＋ Post Ad Free
     </button>
@@ -547,22 +560,22 @@ footer{background:#000;border-top-color:#333}
     </div>
   </div>
   <div class="categories">
-    <button class="category" onclick="chooseCategory(\'Cars\',false)">
+    <button class="category" onclick="chooseCategory('Cars',false)">
       <span class="icon">🚗</span><strong>Cars</strong><small>Cars for sale</small>
     </button>
-    <button class="category" onclick="chooseCategory(\'Bikes\',false)">
+    <button class="category" onclick="chooseCategory('Bikes',false)">
       <span class="icon">🏍️</span><strong>Bikes</strong><small>Bikes for sale</small>
     </button>
-    <button class="category" onclick="chooseCategory(\'House\',false)">
+    <button class="category" onclick="chooseCategory('House',false)">
       <span class="icon">🏠</span><strong>House</strong><small>Rent and sale</small>
     </button>
-    <button class="category" onclick="chooseCategory(\'Mobiles\',false)">
+    <button class="category" onclick="chooseCategory('Mobiles',false)">
       <span class="icon">📱</span><strong>Mobiles</strong><small>Phones and devices</small>
     </button>
-    <button class="category" onclick="chooseCategory(\'Jobs\',false)">
+    <button class="category" onclick="chooseCategory('Jobs',false)">
       <span class="icon">💼</span><strong>Jobs</strong><small>Jobs and careers</small>
     </button>
-    <button class="category" onclick="chooseCategory(\'House Movers\',false)">
+    <button class="category" onclick="chooseCategory('House Movers',false)">
       <span class="icon">🚚</span><strong>House Movers</strong><small>Moving services</small>
     </button>
   </div>
@@ -577,34 +590,39 @@ footer{background:#000;border-top-color:#333}
     <button class="btn btn-orange" onclick="openPostForm()">＋ Post Ad</button>
   </div>
 
-  <div class="filters">
-    <div class="field">
-      <label for="searchInput">SEARCH</label>
-      <input id="searchInput" placeholder="Search cars, mobiles, jobs..." oninput="renderAds()">
+  <div class="filters filters-collapsible">
+    <div class="search-filter-row">
+      <div class="field search-keyword-field">
+        <label for="searchInput">SEARCH</label>
+        <input id="searchInput" placeholder="Search cars, mobiles, jobs..." oninput="renderAds()">
+      </div>
+      <button type="button" class="btn btn-dark filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="extraFilters" onclick="toggleExtraFilters()">☷ Filters <span id="filterChevron">▾</span></button>
     </div>
-    <div class="field">
-      <label for="filterCategory">CATEGORY</label>
-      <select id="filterCategory" onchange="renderAds()">
-        <option value="">Categories</option>
-        <option>Cars</option><option>Bikes</option><option>House</option>
-        <option>Mobiles</option><option>Jobs</option><option>House Movers</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="filterDistrict">DISTRICT</label>
-      <select id="filterDistrict" onchange="updateFilterAreas();renderAds()">
-        <option value="">Tamil Nadu</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="filterArea">AREA</label>
-      <select id="filterArea" onchange="renderAds()">
-        <option value="">Area</option>
-      </select>
-    </div>
-    <div class="filter-actions">
-      <button class="btn btn-orange" onclick="renderAds()">Search</button>
-      <button class="btn btn-dark" onclick="clearFilters()">Reset</button>
+    <div id="extraFilters" class="extra-filters hidden">
+      <div class="field">
+        <label for="filterCategory">CATEGORY</label>
+        <select id="filterCategory" onchange="renderAds()">
+          <option value="">Categories</option>
+          <option>Cars</option><option>Bikes</option><option>House</option>
+          <option>Mobiles</option><option>Jobs</option><option>House Movers</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="filterDistrict">DISTRICT</label>
+        <select id="filterDistrict" onchange="updateFilterAreas();renderAds()">
+          <option value="">Tamil Nadu</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="filterArea">AREA</label>
+        <select id="filterArea" onchange="renderAds()">
+          <option value="">Area</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-orange" onclick="renderAds()">Search</button>
+        <button class="btn btn-dark" onclick="clearFilters()">Reset</button>
+      </div>
     </div>
   </div>
 </section>
@@ -639,54 +657,7 @@ footer{background:#000;border-top-color:#333}
   </div>
 </section>
 
-<section class="section district-directory-section" id="districtDirectory">
-  <div class="section-heading">
-    <div>
-      <h2>Tamil Nadu <span>Districts & Categories</span></h2>
-      <div class="section-sub">Choose a category under any district to view matching listings.</div>
-    </div>
-  </div>
-  <div class="district-directory-grid">
-<article class="district-directory-card"><h3>Ariyalur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ariyalur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ariyalur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ariyalur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ariyalur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ariyalur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ariyalur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Chengalpattu</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chengalpattu','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chengalpattu','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chengalpattu','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chengalpattu','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chengalpattu','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chengalpattu','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Chennai</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chennai','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chennai','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chennai','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chennai','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chennai','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Chennai','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Coimbatore</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Coimbatore','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Coimbatore','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Coimbatore','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Coimbatore','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Coimbatore','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Coimbatore','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Cuddalore</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Cuddalore','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Cuddalore','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Cuddalore','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Cuddalore','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Cuddalore','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Cuddalore','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Dharmapuri</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dharmapuri','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dharmapuri','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dharmapuri','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dharmapuri','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dharmapuri','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dharmapuri','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Dindigul</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dindigul','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dindigul','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dindigul','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dindigul','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dindigul','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Dindigul','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Erode</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Erode','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Erode','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Erode','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Erode','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Erode','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Erode','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Kallakurichi</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kallakurichi','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kallakurichi','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kallakurichi','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kallakurichi','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kallakurichi','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kallakurichi','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Kancheepuram</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kancheepuram','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kancheepuram','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kancheepuram','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kancheepuram','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kancheepuram','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kancheepuram','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Kanniyakumari</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kanniyakumari','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kanniyakumari','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kanniyakumari','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kanniyakumari','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kanniyakumari','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Kanniyakumari','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Karur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Karur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Karur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Karur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Karur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Karur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Karur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Krishnagiri</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Krishnagiri','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Krishnagiri','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Krishnagiri','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Krishnagiri','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Krishnagiri','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Krishnagiri','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Madurai</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Madurai','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Madurai','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Madurai','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Madurai','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Madurai','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Madurai','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Mayiladuthurai</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Mayiladuthurai','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Mayiladuthurai','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Mayiladuthurai','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Mayiladuthurai','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Mayiladuthurai','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Mayiladuthurai','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Nagapattinam</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Nagapattinam','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Nagapattinam','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Nagapattinam','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Nagapattinam','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Nagapattinam','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Nagapattinam','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Namakkal</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Namakkal','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Namakkal','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Namakkal','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Namakkal','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Namakkal','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Namakkal','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>The Nilgiris</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('The Nilgiris','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('The Nilgiris','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('The Nilgiris','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('The Nilgiris','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('The Nilgiris','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('The Nilgiris','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Perambalur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Perambalur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Perambalur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Perambalur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Perambalur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Perambalur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Perambalur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Pudukkottai</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Pudukkottai','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Pudukkottai','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Pudukkottai','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Pudukkottai','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Pudukkottai','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Pudukkottai','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Ramanathapuram</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ramanathapuram','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ramanathapuram','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ramanathapuram','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ramanathapuram','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ramanathapuram','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ramanathapuram','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Ranipet</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ranipet','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ranipet','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ranipet','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ranipet','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ranipet','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Ranipet','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Salem</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Salem','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Salem','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Salem','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Salem','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Salem','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Salem','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Sivaganga</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Sivaganga','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Sivaganga','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Sivaganga','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Sivaganga','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Sivaganga','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Sivaganga','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tenkasi</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tenkasi','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tenkasi','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tenkasi','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tenkasi','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tenkasi','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tenkasi','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Thanjavur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thanjavur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thanjavur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thanjavur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thanjavur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thanjavur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thanjavur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Theni</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Theni','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Theni','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Theni','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Theni','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Theni','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Theni','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Thoothukudi</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thoothukudi','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thoothukudi','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thoothukudi','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thoothukudi','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thoothukudi','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Thoothukudi','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tiruchirappalli</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruchirappalli','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruchirappalli','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruchirappalli','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruchirappalli','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruchirappalli','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruchirappalli','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tirunelveli</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirunelveli','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirunelveli','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirunelveli','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirunelveli','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirunelveli','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirunelveli','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tirupathur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirupathur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirupathur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirupathur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirupathur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirupathur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tirupathur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tiruppur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruppur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruppur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruppur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruppur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruppur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruppur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tiruvallur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvallur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvallur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvallur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvallur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvallur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvallur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tiruvannamalai</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvannamalai','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvannamalai','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvannamalai','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvannamalai','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvannamalai','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvannamalai','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Tiruvarur</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvarur','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvarur','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvarur','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvarur','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvarur','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Tiruvarur','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Vellore</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Vellore','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Viluppuram</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Viluppuram','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-<article class="district-directory-card"><h3>Virudhunagar</h3><div class="district-category-links"><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Cars')"><span>🚗</span>Cars Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Bikes')"><span>🏍️</span>Bike Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Mobiles')"><span>📱</span>Mobile Sales</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','Jobs')"><span>💼</span>Jobs</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','House Movers')"><span>🚚</span>House Movers</button><button type="button" class="district-category-link" onclick="filterDistrictCategory('Virudhunagar','House')"><span>🏠</span>Houses for Sale / Rent</button></div></article>
-  </div>
-</section>
+
 
 <section class="section" id="plans">
   <div class="section-heading">
@@ -995,44 +966,44 @@ const DISTRICTS = [
 ];
 
 const AREAS = {
-  "Tiruppur":["Tiruppur","Avinashi","Palladam","Kangeyam","Dharapuram","Udumalaipettai","Perumanallur","Mangalam","Arulpuram","Old Bus Stand","New Bus Stand"],
-  "Coimbatore":["Coimbatore","Gandhipuram","Peelamedu","RS Puram","Singanallur","Pollachi","Mettupalayam"],
-  "Chennai":["Chennai","Anna Nagar","T Nagar","Tambaram","Velachery","Porur","Adyar"],
-  "Erode":["Erode","Gobichettipalayam","Bhavani","Perundurai"],
-  "Salem":["Salem","Attur","Mettur","Omalur"],
-  "Madurai":["Madurai","Thirumangalam","Melur","Usilampatti"],
-  "Tiruchirappalli":["Tiruchirappalli","Srirangam","Thuraiyur","Manapparai"],
-  "Dindigul":["Dindigul","Palani","Oddanchatram","Kodaikanal"],
-  "Thanjavur":["Thanjavur","Kumbakonam","Pattukkottai"],
-  "Namakkal":["Namakkal","Tiruchengode","Rasipuram"],
-  "Vellore":["Vellore","Katpadi","Gudiyatham"],
-  "Kancheepuram":["Kancheepuram","Kundrathur","Sriperumbudur"],
-  "Tirunelveli":["Tirunelveli","Ambasamudram","Nanguneri"],
-  "Thoothukudi":["Thoothukudi","Kovilpatti","Tiruchendur"],
-  "Kanniyakumari":["Nagercoil","Marthandam","Kanyakumari"],
-  "Karur":["Karur","Kulithalai"],
-  "Krishnagiri":["Krishnagiri","Hosur"],
-  "Dharmapuri":["Dharmapuri","Harur"],
-  "Cuddalore":["Cuddalore","Chidambaram","Neyveli"],
-  "Theni":["Theni","Bodinayakanur","Periyakulam"],
-  "Pudukkottai":["Pudukkottai","Aranthangi"],
-  "Ramanathapuram":["Ramanathapuram","Paramakudi"],
-  "Virudhunagar":["Virudhunagar","Sivakasi","Rajapalayam"],
-  "Sivaganga":["Sivaganga","Karaikudi"],
-  "Tenkasi":["Tenkasi","Sankarankovil"],
-  "The Nilgiris":["Ooty","Coonoor","Kotagiri"],
-  "Perambalur":["Perambalur","Kunnam"],
-  "Ariyalur":["Ariyalur","Jayankondam"],
-  "Nagapattinam":["Nagapattinam","Vedaranyam"],
-  "Tiruvarur":["Tiruvarur","Mannargudi"],
-  "Mayiladuthurai":["Mayiladuthurai","Sirkazhi"],
-  "Kallakurichi":["Kallakurichi","Chinnasalem"],
-  "Viluppuram":["Viluppuram","Tindivanam"],
-  "Tiruvannamalai":["Tiruvannamalai","Arani"],
-  "Tiruvallur":["Tiruvallur","Avadi","Ponneri"],
-  "Chengalpattu":["Chengalpattu","Mahabalipuram"],
-  "Ranipet":["Ranipet","Arcot"],
-  "Tirupathur":["Tirupathur","Vaniyambadi"]
+  "Ariyalur":["Ariyalur","Jayankondam","Sendurai","Andimadam","Udayarpalayam","T.Palur","Thirumanur","Vilangudi","Keelapalur","Sathamangalam","Kulumur","Kallankurichi"],
+  "Chengalpattu":["Chengalpattu","Tambaram","Pallavaram","Chromepet","Guduvanchery","Maraimalai Nagar","Mahabalipuram","Thiruporur","Kelambakkam","Vandalur","Singaperumal Koil","Madurantakam","Cheyyur","Acharapakkam","Urapakkam","Perungalathur"],
+  "Chennai":["Chennai","T. Nagar","Anna Nagar","Adyar","Velachery","Porur","Mylapore","Guindy","Ambattur","Avadi","Thiruvanmiyur","Perambur","Kolathur","Washermenpet","Royapettah","Nungambakkam","Kodambakkam","Pallikaranai","Sholinganallur","Thoraipakkam","Medavakkam","Madhavaram","Manali","Poonamallee"],
+  "Coimbatore":["Coimbatore","Gandhipuram","Peelamedu","RS Puram","Singanallur","Saibaba Colony","Town Hall","Ukkadam","Pollachi","Mettupalayam","Sulur","Annur","Kinathukadavu","Perur","Madukkarai","Thondamuthur","Karamadai","Valparai","Podanur","Saravanampatti","Vadavalli","Kovaipudur","Kurichi","Ganapathy"],
+  "Cuddalore":["Cuddalore","Chidambaram","Neyveli","Panruti","Virudhachalam","Vadalur","Kurinjipadi","Bhuvanagiri","Kattumannarkoil","Parangipettai","Tittakudi","Srimushnam","Nellikuppam","Annamalai Nagar"],
+  "Dharmapuri":["Dharmapuri","Harur","Palacode","Pennagaram","Pappireddipatti","Nallampalli","Karimangalam","Morappur","Hogenakkal","Bommidi","Kambainallur"],
+  "Dindigul":["Dindigul","Palani","Oddanchatram","Kodaikanal","Nilakottai","Vedasandur","Natham","Batlagundu","Gujiliamparai","Ayyalur","Chinnalapatti","Vadamadurai"],
+  "Erode":["Erode","Gobichettipalayam","Bhavani","Perundurai","Sathyamangalam","Modakurichi","Kodumudi","Anthiyur","Chennimalai","Nambiyur","Thalavadi","Ammapettai","Arachalur","Avalpoondurai"],
+  "Kallakurichi":["Kallakurichi","Chinnasalem","Sankarapuram","Tirukoilur","Ulundurpet","Kalvarayan Hills","Thiyagadurgam","Rishivandiyam","Manalurpet","Vadakkanandal"],
+  "Kancheepuram":["Kancheepuram","Sriperumbudur","Kundrathur","Uthiramerur","Walajabad","Oragadam","Sunguvarchatram","Kunnam","Enathur"],
+  "Kanniyakumari":["Nagercoil","Marthandam","Kanyakumari","Colachel","Padmanabhapuram","Thuckalay","Kulasekaram","Kuzhithurai","Thiruvattar","Karungal","Boothapandi","Suchindram"],
+  "Karur":["Karur","Kulithalai","Aravakurichi","Krishnarayapuram","Pallapatti","Thanthoni","Vangal","Velayuthampalayam","Nerur"],
+  "Krishnagiri":["Krishnagiri","Hosur","Denkanikottai","Bargur","Pochampalli","Uthangarai","Shoolagiri","Kelamangalam","Kaveripattinam","Mathur"],
+  "Madurai":["Madurai","Thirumangalam","Melur","Usilampatti","Vadipatti","Peraiyur","Alanganallur","Sholavandan","Thiruparankundram","Avaniyapuram","Othakadai","Tallakulam","Anna Nagar","Koodal Nagar"],
+  "Mayiladuthurai":["Mayiladuthurai","Sirkazhi","Kuthalam","Tharangambadi","Vaitheeswarankoil","Manalmedu","Kollidam","Porayar"],
+  "Nagapattinam":["Nagapattinam","Vedaranyam","Thirukkuvalai","Kilvelur","Thalainayar","Velankanni","Sikkal","Akkaraipettai"],
+  "Namakkal":["Namakkal","Tiruchengode","Rasipuram","Kumarapalayam","Paramathi Velur","Sendamangalam","Mohanur","Kollimalai","Pallipalayam","Erumaipatti"],
+  "Perambalur":["Perambalur","Kunnam","Veppanthattai","Alathur","Labbaikudikadu","Poolambadi","Arumbavur","Chettikulam"],
+  "Pudukkottai":["Pudukkottai","Aranthangi","Alangudi","Iluppur","Keeranur","Gandarvakottai","Manamelkudi","Avudaiyarkoil","Viralimalai","Ponnamaravathi"],
+  "Ramanathapuram":["Ramanathapuram","Paramakudi","Rameswaram","Kamuthi","Mudukulathur","Kadaladi","Thiruvadanai","R.S. Mangalam","Uchipuli","Sayalkudi"],
+  "Ranipet":["Ranipet","Arcot","Walajah","Sholinghur","Arakkonam","Kalavai","Nemili","Banavaram","Melvisharam","Thimiri"],
+  "Salem":["Salem","Attur","Mettur","Omalur","Edappadi","Sankari","Yercaud","Vazhapadi","Gangavalli","Thalaivasal","Mecheri","Kadayampatti"],
+  "Sivaganga":["Sivaganga","Karaikudi","Devakottai","Manamadurai","Tirupathur","Ilayangudi","Kalaiyarkoil","Singampunari","Thirupuvanam","Kanadukathan"],
+  "Tenkasi":["Tenkasi","Sankarankovil","Kadayanallur","Puliyangudi","Sivagiri","Alangulam","Shenkottai","Vasudevanallur","Courtallam","Pavoorchatram"],
+  "Thanjavur":["Thanjavur","Kumbakonam","Pattukkottai","Orathanadu","Thiruvaiyaru","Papanasam","Peravurani","Thirukattupalli","Madukkur","Ammapettai"],
+  "Theni":["Theni","Bodinayakanur","Periyakulam","Cumbum","Andipatti","Uthamapalayam","Chinnamanur","Gudalur","Thevaram","Kombai"],
+  "Thoothukudi":["Thoothukudi","Kovilpatti","Tiruchendur","Srivaikuntam","Sathankulam","Eral","Vilathikulam","Ottapidaram","Kayathar","Arumuganeri","Nazareth"],
+  "Tiruchirappalli":["Tiruchirappalli","Srirangam","Thuraiyur","Manapparai","Lalgudi","Musiri","Thottiyam","Thiruverumbur","Manachanallur","Samayapuram","Woraiyur","Golden Rock"],
+  "Tirunelveli":["Tirunelveli","Ambasamudram","Nanguneri","Valliyur","Radhapuram","Cheranmahadevi","Kalakadu","Manur","Thisayanvilai","Melapalayam","Palayamkottai"],
+  "Tirupathur":["Tirupathur","Vaniyambadi","Ambur","Natrampalli","Jolarpet","Alangayam","Kandili","Madanur"],
+  "Tiruppur":["Tiruppur","Avinashi","Palladam","Kangeyam","Dharapuram","Udumalaipettai","Perumanallur","Mangalam","Arulpuram","Old Bus Stand","New Bus Stand","Velampalayam","Nallur","Anupparpalayam","Thirumuruganpoondi","Uthukuli","Mulanur","Kundadam","Madathukulam","Gudimangalam"],
+  "Tiruvallur":["Tiruvallur","Avadi","Ponneri","Gummidipoondi","Tiruttani","Poonamallee","Thiruninravur","Pattabiram","Minjur","Uthukottai","Pallipet","Red Hills","Ambattur"],
+  "Tiruvannamalai":["Tiruvannamalai","Arani","Polur","Cheyyar","Vandavasi","Chengam","Kalasapakkam","Chetpet","Kilpennathur","Thandrampet"],
+  "Tiruvarur":["Tiruvarur","Mannargudi","Thiruthuraipoondi","Needamangalam","Koothanallur","Valangaiman","Nannilam","Kodavasal","Muthupettai"],
+  "Vellore":["Vellore","Katpadi","Gudiyatham","Pernambut","Anaicut","K.V. Kuppam","Odugathur","Bagayam","Sathuvachari"],
+  "Viluppuram":["Viluppuram","Tindivanam","Gingee","Kallakurichi border areas","Vikravandi","Kandachipuram","Marakkanam","Thiruvennainallur","Valavanur","Ananthapuram"],
+  "Virudhunagar":["Virudhunagar","Sivakasi","Rajapalayam","Aruppukottai","Sattur","Srivilliputhur","Kariapatti","Watrap","Tiruchuli","Vembakottai"],
+  "The Nilgiris":["Udhagamandalam (Ooty)","Coonoor","Kotagiri","Gudalur","Pandalur","Kundah","Ketti","Wellington","Lovedale","Aravankadu"]
 };
 
 const DEMO_ADS = [
@@ -1162,6 +1133,14 @@ function updateFilterAreas(){
   let list=district ? (AREAS[district]||[]) : [...new Set(Object.values(AREAS).flat())].sort();
   list.forEach(a=>select.add(new Option(a,a)));
   if(list.includes(old))select.value=old;
+}
+function toggleExtraFilters(){
+  const panel=document.getElementById("extraFilters");
+  const button=document.getElementById("filterToggle");
+  const open=panel.classList.contains("hidden");
+  panel.classList.toggle("hidden",!open);
+  button.setAttribute("aria-expanded",String(open));
+  document.getElementById("filterChevron").textContent=open?"▴":"▾";
 }
 function clearFilters(){
   document.getElementById("searchInput").value="";
