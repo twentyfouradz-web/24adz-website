@@ -1,491 +1,172 @@
 /**
- * ==========================================
- * 24Adz.com - Cloudflare Worker API
- * PART 1: INITIAL SETUP
- * ==========================================
- *
- * D1 Database Binding: DB
- * Secret: ADMIN_API_TOKEN
+ * 24Adz.com Cloudflare Worker API
+ * Required:
+ *   D1 binding: DB
+ *   Secret: ADMIN_API_TOKEN
+ *   Variable: ALLOWED_ORIGIN -> https://24adz.com
  */
 
-export default {
-  async fetch(request, env, ctx) {
+const JSON_HEADERS = { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" };
 
-    const url = new URL(request.url);
+function response(data, status = 200, origin = "*") {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...JSON_HEADERS, "access-control-allow-origin": origin,
+      "access-control-allow-methods": "GET,POST,PUT,DELETE,OPTIONS",
+      "access-control-allow-headers": "Content-Type,Authorization",
+      "vary": "Origin" }
+  });
+}
 
-    const path = url.pathname.replace(/\/+$/, "") || "/";
+function fail(message, status, origin) { 
+  return response({ ok: false, error: message }, status, origin); 
+}
 
-    const method = request.method;
+function safeOrigin(request, env) {
+  const requestOrigin = request.headers.get("Origin") || "";
+  const allowed = env.ALLOWED_ORIGIN || "https://24adz.com";
+  return requestOrigin === allowed ? allowed : allowed;
+}
 
-    // ======================================
-    // CORS HEADERS
-    // ======================================
+function isAdmin(request, env) {
+  const configured = env.ADMIN_API_TOKEN;
+  const auth = request.headers.get("Authorization") || "";
+  return !!configured && auth === `Bearer ${configured}`;
+}function slugify(value) {
+  return String(value || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
+function normalizeStatus(status) {
+  const s = String(status || "Pending").toLowerCase();
+  return ({ pending: "pending", active: "active", rejected: "rejected", expired: "expired" })[s] || "pending";
+}
 
-      "Access-Control-Allow-Methods":
-        "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+function adminShape(row) {
+  return {
+    id: row.id, title: row.title, description: row.description || "",
+    category: row.category, district: row.district, area: row.area || "",
+    price: row.price_paise == null ? 0 : row.price_paise / 100,
+    status: ({pending:"Pending",active:"Active",rejected:"Rejected",expired:"Expired",draft:"Pending",blocked:"Rejected",deleted:"Rejected"})[row.status] || "Pending",
+    expiry: row.expires_at ? String(row.expires_at).slice(0,10) : "",
+    vip: !!(row.is_vip || row.is_featured),
+    name: row.contact_name || "", phone: row.contact_phone_e164 || "",
+    whatsapp: row.whatsapp_enabled ? (row.contact_phone_e164 || "") : ""
+  };
+}
 
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization",
+async function lookupId(db, table, name) {
+  const column = table === "categories" ? "name" : "name";
+  const row = await db.prepare(`SELECT id FROM ${table} WHERE lower(${column})=lower(?) AND is_active=1 LIMIT 1`).bind(name).first();
+  return row?.id ?? null;
+}async function listAds(db, url, admin = false) {
+  const params = [];
+  let where = admin ? "1=1" : "a.status='active' AND (a.expires_at IS NULL OR a.expires_at >= datetime('now')) AND a.deleted_at IS NULL";
+  const district = url.searchParams.get("district");
+  const category = url.searchParams.get("category");
+  if (district) { where += " AND lower(d.name)=lower(?)"; params.push(district); }
+  if (category) { where += " AND lower(c.name)=lower(?)"; params.push(category); }
+  const result = await db.prepare(`
+    SELECT a.id,a.title,a.description,a.price_paise,a.status,a.is_vip,a.is_featured,
+           a.expires_at,a.created_at,a.contact_name,a.contact_phone_e164,a.whatsapp_enabled,
+           c.name AS category,d.name AS district,ar.name AS area
+    FROM ads a
+    JOIN categories c ON c.id=a.category_id
+    JOIN districts d ON d.id=a.district_id
+    LEFT JOIN areas ar ON ar.id=a.area_id
+    WHERE ${where}
+    ORDER BY a.is_vip DESC, a.is_featured DESC, a.created_at DESC
+    LIMIT 500
+  `).bind(...params).all();
+  return (result.results || []).map(row => {
+    const item = adminShape(row);
+    item.createdAt = row.created_at ? Date.parse(row.created_at) || Date.now() : Date.now();
+    item.demo = false;
+    return item;
+  });
+}
 
-      "Content-Type":
-        "application/json; charset=UTF-8",
-
-      "X-Content-Type-Options":
-        "nosniff"
-    };
-
-    // ======================================
-    // JSON RESPONSE FUNCTION
-    // ======================================
-
-    function json(data, status = 200) {
-
-      return new Response(
-        JSON.stringify(data),
-        {
-          status: status,
-          headers: corsHeaders
-        }
-      );
-
-    }
-
-    // ======================================
-    // HANDLE PREFLIGHT REQUEST
-    // ======================================
-
-    if (method === "OPTIONS") {
-
-      return new Response(null, {
-        status: 204,
-        headers: corsHeaders
-      });
-
-    }
-
-    // ======================================
-    // NEXT PARTS WILL BE ADDED HERE
-    // ======================================
-
-    try {
-
-      // PART 2: HEALTH CHECK
-      // PART 3: ADMIN AUTHENTICATION
-      // PART 4: GET ADVERTISEMENTS
-      // PART 5: GET SINGLE AD
-      // PART 6: CREATE AD
-      // PART 7: UPDATE AND DELETE ADS
-      // PART 8: ERROR HANDLING AND CLOSING
-
-    } catch (error) {
-
-      console.error("24Adz API Error:", error);
-
-      return json({
-        success: false,
-        message: "Internal server error"
-      }, 500);
-
-    }
-
+async function saveAd(request, env, id = null) {
+  let body;
+  try { body = await request.json(); } catch { return { error: "Invalid JSON body", status: 400 }; }
+  const title = String(body.title || "").trim().slice(0,100);
+  const category = String(body.category || "").trim();
+  const district = String(body.district || "").trim();
+  const area = String(body.area || "").trim().slice(0,100);
+  const description = String(body.description || "").trim().slice(0,2000);
+  if (!title || !category || !district || !area) return { error: "title, category, district and area are required", status: 400 };
+  const categoryId = await lookupId(env.DB, "categories", category);
+  const districtId = await lookupId(env.DB, "districts", district);
+  if (!categoryId || !districtId) return { error: "Unknown category or district. Check the D1 seed data.", status: 400 };
+  let areaId = null;
+  const areaRow = await env.DB.prepare("SELECT id FROM areas WHERE district_id=? AND lower(name)=lower(?) AND is_active=1 LIMIT 1").bind(districtId, area).first();
+  if (areaRow) areaId = areaRow.id;
+  const price = body.price === "" || body.price == null ? null : Number(body.price);
+  if (price !== null && (!Number.isFinite(price) || price < 0 || price > 100000000000)) return { error: "Invalid price", status: 400 };
+  const status = normalizeStatus(body.status);
+  const expiry = body.expiry ? `${String(body.expiry).slice(0,10)}T23:59:59.000Z` : null;
+  const vip = body.vip === true || body.vip === "yes" || body.vip === 1;
+  const phone = String(body.phone || "").trim().slice(0,20) || null;
+  const name = String(body.name || "").trim().slice(0,100) || null;
+  const now = new Date().toISOString();
+  if (id) {
+    const exists = await env.DB.prepare("SELECT id FROM ads WHERE id=? AND deleted_at IS NULL").bind(id).first();
+    if (!exists) return { error: "Listing not found", status: 404 };
+    await env.DB.prepare(`
+      UPDATE ads SET title=?,description=?,price_paise=?,category_id=?,district_id=?,area_id=?,
+      status=?,is_vip=?,expires_at=?,contact_name=?,contact_phone_e164=?,updated_at=?
+      WHERE id=?
+    `).bind(title,description,price === null ? null : Math.round(price*100),categoryId,districtId,areaId,status,vip?1:0,expiry,name,phone,now,id).run();
+    return { id, status: 200 };
   }
-};      if (path === "/api/health" && method === "GET") {
-        return json({
-          success: true,
-          website: "24Adz.com",
-          message: "API is running",
-          database: "D1"
-        });
+  const newId = crypto.randomUUID();
+  await env.DB.prepare(`
+    INSERT INTO ads (id,title,description,price_paise,category_id,district_id,area_id,status,is_vip,
+      expires_at,contact_name,contact_phone_e164,contact_phone_verified,whatsapp_enabled,created_at,updated_at)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,0,0,?,?)
+  `).bind(newId,title,description,price === null ? null : Math.round(price*100),categoryId,districtId,areaId,status,vip?1:0,expiry,name,phone,now,now).run();
+  return { id: newId, status: 201 };
+    }export default {
+  async fetch(request, env) {
+    const origin = safeOrigin(request, env);
+    const url = new URL(request.url);
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: {
+      "access-control-allow-origin": origin, "access-control-allow-methods": "GET,POST,PUT,DELETE,OPTIONS",
+      "access-control-allow-headers": "Content-Type,Authorization", "vary": "Origin"
+    }});
+    if (!url.pathname.startsWith("/api/")) return fail("Not found",404,origin);
+    try {
+      if (url.pathname === "/api/health" && request.method === "GET") {
+        return response({ok:true,service:"24adz-api",database:!!env.DB},200,origin);
       }
-
-      if (path === "/api" && method === "GET") {
-        return json({
-          success: true,
-          website: "24Adz.com",
-          message: "Welcome to 24Adz API"
-        });
-      }      async function verifyAdmin() {
-        const authHeader = request.headers.get("Authorization");
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-          return false;
-        }
-
-        const token = authHeader.slice(7);
-
-        if (!env.ADMIN_API_TOKEN || !token) {
-          return false;
-        }
-
-        const encoder = new TextEncoder();
-        const tokenBytes = encoder.encode(token);
-        const secretBytes = encoder.encode(env.ADMIN_API_TOKEN);
-
-        if (tokenBytes.length !== secretBytes.length) {
-          return false;
-        }
-
-        let difference = 0;
-
-        for (let i = 0; i < tokenBytes.length; i++) {
-          difference |= tokenBytes[i] ^ secretBytes[i];
-        }
-
-        return difference === 0;
+      if (url.pathname === "/api/ads" && request.method === "GET") {
+        if (!env.DB) return fail("D1 binding DB is missing",500,origin);
+        return response({ok:true,ads:await listAds(env.DB,url,false)},200,origin);
       }
-
-      async function requireAdmin() {
-        const authenticated = await verifyAdmin();
-
-        if (!authenticated) {
-          return json({
-            success: false,
-            message: "Admin authentication required"
-          }, 401);
+      if (url.pathname === "/api/admin/ads") {
+        if (!isAdmin(request,env)) return fail("Unauthorized",401,origin);
+        if (!env.DB) return fail("D1 binding DB is missing",500,origin);
+        if (request.method === "GET") return response({ok:true,ads:await listAds(env.DB,url,true)},200,origin);
+        if (request.method === "POST") {
+          const result = await saveAd(request,env);
+          return result.error ? fail(result.error,result.status,origin) : response({ok:true,id:result.id},result.status,origin);
         }
-
-        return null;
       }
-
-      if (path === "/api/admin/verify" && method === "GET") {
-        const authError = await requireAdmin();
-
-        if (authError) {
-          return authError;
+      const match = url.pathname.match(/^\/api\/admin\/ads\/([A-Za-z0-9_-]+)$/);
+      if (match) {
+        if (!isAdmin(request,env)) return fail("Unauthorized",401,origin);
+        if (request.method === "PUT") {
+          const result = await saveAd(request,env,match[1]);
+          return result.error ? fail(result.error,result.status,origin) : response({ok:true,id:result.id},200,origin);
         }
-
-        return json({
-          success: true,
-          message: "Admin authentication successful"
-        });
-      }      if (path === "/api/ads" && method === "GET") {
-        const category = url.searchParams.get("category");
-        const district = url.searchParams.get("district");
-        const area = url.searchParams.get("area");
-        const search = url.searchParams.get("search");
-
-        const page = Math.max(
-          1,
-          parseInt(url.searchParams.get("page") || "1", 10)
-        );
-
-        const limit = Math.min(
-          100,
-          Math.max(
-            1,
-            parseInt(url.searchParams.get("limit") || "50", 10)
-          )
-        );
-
-        const offset = (page - 1) * limit;
-
-        let sql = "SELECT * FROM ads WHERE 1 = 1";
-        const params = [];
-
-        if (category) {
-          sql += " AND category = ?";
-          params.push(category);
+        if (request.method === "DELETE") {
+          const result = await env.DB.prepare("UPDATE ads SET status='deleted',deleted_at=?,updated_at=? WHERE id=? AND deleted_at IS NULL").bind(new Date().toISOString(),new Date().toISOString(),match[1]).run();
+          if (!result.meta?.changes) return fail("Listing not found",404,origin);
+          return response({ok:true},200,origin);
         }
-
-        if (district) {
-          sql += " AND district = ?";
-          params.push(district);
-        }
-
-        if (area) {
-          sql += " AND area = ?";
-          params.push(area);
-        }
-
-        if (search) {
-          sql += " AND (title LIKE ? OR description LIKE ?)";
-          params.push("%" + search + "%", "%" + search + "%");
-        }
-
-        sql += " ORDER BY id DESC LIMIT ? OFFSET ?";
-        params.push(limit, offset);
-
-        const result = await env.DB
-          .prepare(sql)
-          .bind(...params)
-          .all();
-
-        return json({
-          success: true,
-          page: page,
-          limit: limit,
-          count: result.results.length,
-          ads: result.results
-        });
-      }      const singleAdMatch = path.match(
-        /^\/api\/ads\/(\d+)$/
-      );
-
-      if (singleAdMatch && method === "GET") {
-        const id = Number(singleAdMatch[1]);
-
-        const ad = await env.DB
-          .prepare("SELECT * FROM ads WHERE id = ?")
-          .bind(id)
-          .first();
-
-        if (!ad) {
-          return json({
-            success: false,
-            message: "Advertisement not found"
-          }, 404);
-        }
-
-        return json({
-          success: true,
-          ad: ad
-        });
-      }      if (path === "/api/ads" && method === "POST") {
-        const authError = await requireAdmin();
-
-        if (authError) {
-          return authError;
-        }
-
-        let body;
-
-        try {
-          body = await request.json();
-        } catch {
-          return json({
-            success: false,
-            message: "Invalid JSON request body"
-          }, 400);
-        }
-
-        if (
-          !body ||
-          typeof body.title !== "string" ||
-          typeof body.category !== "string" ||
-          typeof body.district !== "string"
-        ) {
-          return json({
-            success: false,
-            message: "Title, category and district are required"
-          }, 400);
-        }
-
-        const title = body.title.trim();
-        const category = body.category.trim();
-        const district = body.district.trim();
-
-        const area =
-          typeof body.area === "string"
-            ? body.area.trim()
-            : "";
-
-        const description =
-          typeof body.description === "string"
-            ? body.description.trim()
-            : "";
-
-        if (!title || !category || !district) {
-          return json({
-            success: false,
-            message: "Title, category and district cannot be empty"
-          }, 400);
-        }
-
-        if (
-          title.length > 200 ||
-          category.length > 100 ||
-          district.length > 100 ||
-          area.length > 150 ||
-          description.length > 10000
-        ) {
-          return json({
-            success: false,
-            message: "One or more fields exceed the allowed length"
-          }, 400);
-        }
-
-        const result = await env.DB
-          .prepare(`
-            INSERT INTO ads (
-              title,
-              category,
-              district,
-              area,
-              description
-            )
-            VALUES (?, ?, ?, ?, ?)
-          `)
-          .bind(
-            title,
-            category,
-            district,
-            area,
-            description
-          )
-          .run();
-
-        return json({
-          success: true,
-          message: "Advertisement created successfully",
-          id: result.meta.last_row_id
-        }, 201);
-      }      if (
-        singleAdMatch &&
-        (method === "PUT" || method === "PATCH")
-      ) {
-        const authError = await requireAdmin();
-
-        if (authError) {
-          return authError;
-        }
-
-        const id = Number(singleAdMatch[1]);
-
-        let body;
-
-        try {
-          body = await request.json();
-        } catch {
-          return json({
-            success: false,
-            message: "Invalid JSON request body"
-          }, 400);
-        }
-
-        if (!body || typeof body !== "object" || Array.isArray(body)) {
-          return json({
-            success: false,
-            message: "Invalid request data"
-          }, 400);
-        }
-
-        const existing = await env.DB
-          .prepare("SELECT id FROM ads WHERE id = ?")
-          .bind(id)
-          .first();
-
-        if (!existing) {
-          return json({
-            success: false,
-            message: "Advertisement not found"
-          }, 404);
-        }
-
-        const allowedFields = [
-          "title",
-          "category",
-          "district",
-          "area",
-          "description"
-        ];
-
-        const maxLengths = {
-          title: 200,
-          category: 100,
-          district: 100,
-          area: 150,
-          description: 10000
-        };
-
-        const updates = [];
-        const values = [];
-
-        for (const field of allowedFields) {
-          if (
-            Object.prototype.hasOwnProperty.call(body, field)
-          ) {
-            if (typeof body[field] !== "string") {
-              return json({
-                success: false,
-                message: "Invalid value for " + field
-              }, 400);
-            }
-
-            const value = body[field].trim();
-
-            if (value.length > maxLengths[field]) {
-              return json({
-                success: false,
-                message: field + " exceeds the allowed length"
-              }, 400);
-            }
-
-            updates.push(field + " = ?");
-            values.push(value);
-          }
-        }
-
-        if (updates.length === 0) {
-          return json({
-            success: false,
-            message: "No valid fields provided"
-          }, 400);
-        }
-
-        values.push(id);
-
-        await env.DB
-          .prepare(
-            "UPDATE ads SET " +
-            updates.join(", ") +
-            " WHERE id = ?"
-          )
-          .bind(...values)
-          .run();
-
-        return json({
-          success: true,
-          message: "Advertisement updated successfully",
-          id: id
-        });
-      }      if (singleAdMatch && method === "DELETE") {
-        const authError = await requireAdmin();
-
-        if (authError) {
-          return authError;
-        }
-
-        const id = Number(singleAdMatch[1]);
-
-        const existing = await env.DB
-          .prepare("SELECT id FROM ads WHERE id = ?")
-          .bind(id)
-          .first();
-
-        if (!existing) {
-          return json({
-            success: false,
-            message: "Advertisement not found"
-          }, 404);
-        }
-
-        await env.DB
-          .prepare("DELETE FROM ads WHERE id = ?")
-          .bind(id)
-          .run();
-
-        return json({
-          success: true,
-          message: "Advertisement deleted successfully",
-          id: id
-        });
       }
-
-            return json({
-        success: false,
-        message: "API endpoint not found"
-      }, 404);
-
-    } catch (error) {
-      console.error("24Adz API Error:", error);
-
-      return json({
-        success: false,
-        message: "Internal server error"
-      }, 500);
+      return fail("Method or route not allowed",405,origin);
+    } catch (err) {
+      return fail("Server error. Check Worker logs and D1 schema.",500,origin);
     }
   }
 };
