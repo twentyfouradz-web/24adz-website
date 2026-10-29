@@ -495,6 +495,23 @@ footer{background:#000;border-top-color:#333}
 .scam strong{color:#ff7979}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 
+
+/* Future ad display replaces the old Coming Soon hero text only */
+.future-ad-display{
+  width:min(100%,760px);min-height:116px;margin:0 auto 20px;padding:20px 18px 14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border:1px dashed #ff7900;border-radius:14px;
+  background:linear-gradient(120deg,rgba(255,121,0,.12),rgba(0,0,0,.94),rgba(255,121,0,.08));
+  box-shadow:0 0 22px rgba(255,121,0,.12);overflow:hidden;
+}
+.future-ad-tag{font-size:10px;font-weight:800;letter-spacing:2px;color:#ff7900;margin-bottom:7px}
+.future-ad-title{font-size:clamp(18px,3vw,27px);font-weight:1000;letter-spacing:1.5px;color:#fff;animation:futureAdFade .65s ease}
+.future-ad-caption{font-size:13px;color:#d4d4d4;margin-top:6px;animation:futureAdFade .65s ease}
+.future-ad-dots{display:flex;gap:6px;margin-top:12px}
+.future-ad-dots span{width:6px;height:6px;border-radius:50%;background:#555}
+.future-ad-dots span.active{background:#ff7900;box-shadow:0 0 7px #ff7900}
+@keyframes futureAdFade{from{opacity:.15;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
 </head>
 
@@ -514,9 +531,13 @@ footer{background:#000;border-top-color:#333}
 
 <section class="hero">
   <div class="container hero-content">
-    <div class="hero-label">TAMIL NADU'S CLASSIFIED MARKETPLACE</div>
+    <div class="future-ad-display" id="futureAdDisplay" aria-label="Future advertisement display">
+      <div class="future-ad-tag">ADVERTISEMENT SPACE</div>
+      <div class="future-ad-title" id="futureAdTitle">FUTURE AD DISPLAY</div>
+      <div class="future-ad-caption" id="futureAdCaption">Your advertisement will appear here</div>
+      <div class="future-ad-dots" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
+    </div>
     <h1 class="boss-hero-title">24Adz.com</h1>
-    <p class="boss-hero-subtitle tamil-coming-soon">COMING SOON<br><span style="display:inline-block;margin-top:8px;font-size:.48em;letter-spacing:2px;color:#ff7900;-webkit-text-fill-color:#ff7900">24Adz.com · CONNECTING SOON</span></p>
     <button class="btn btn-orange post-main" onclick="openPostForm()">
       ＋ Post Ad Free
     </button>
@@ -1584,6 +1605,33 @@ document.getElementById("year").textContent=new Date().getFullYear();
 fillDistricts();
 updateFilterAreas();
 renderAds();
+
+// Rotate the future ad display messages one at a time. Existing site functionality is unchanged.
+(function(){
+  const slides=[
+    {title:"FUTURE AD DISPLAY",caption:"Your advertisement will appear here"},
+    {title:"PROMOTE YOUR BUSINESS",caption:"Reach customers across Tamil Nadu"},
+    {title:"ADVERTISE WITH 24ADZ",caption:"Your brand. More visibility."}
+  ];
+  let index=0;
+  function showSlide(){
+    const title=document.getElementById("futureAdTitle");
+    const caption=document.getElementById("futureAdCaption");
+    const dots=document.querySelectorAll("#futureAdDisplay .future-ad-dots span");
+    if(!title||!caption)return;
+    title.textContent=slides[index].title;
+    caption.textContent=slides[index].caption;
+    title.style.animation="none";caption.style.animation="none";
+    void title.offsetWidth;
+    title.style.animation="futureAdFade .65s ease";
+    caption.style.animation="futureAdFade .65s ease";
+    dots.forEach((dot,i)=>dot.classList.toggle("active",i===index));
+    index=(index+1)%slides.length;
+  }
+  showSlide();
+  setInterval(showSlide,3500);
+})();
+
 </script>
 </body>
 </html>
