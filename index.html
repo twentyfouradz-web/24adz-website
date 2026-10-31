@@ -512,6 +512,27 @@ footer{background:#000;border-top-color:#333}
 .future-ad-dots span.active{background:#ff7900;box-shadow:0 0 7px #ff7900}
 @keyframes futureAdFade{from{opacity:.15;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
+
+/* Rotating VIP spotlight */
+.vip-spotlight-section{padding:28px 0 32px;background:linear-gradient(135deg,#111,#1c1209 55%,#080808);border-top:1px solid #292929;border-bottom:1px solid #3b2818}
+.vip-spotlight-box{max-width:900px;margin:auto;border:1px solid #ff7900;border-radius:20px;padding:18px;background:linear-gradient(145deg,#1b140e,#101010);box-shadow:0 12px 34px #ff790018}
+.vip-spotlight-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#ffb15b;font-weight:1000;letter-spacing:1.5px;font-size:12px;margin-bottom:14px}
+.vip-spotlight-heading span:last-child{color:#bbb;letter-spacing:0;font-weight:700}
+.vip-spotlight-content{min-height:210px;display:grid;grid-template-columns:minmax(110px,190px) 1fr;gap:18px;align-items:center}
+.vip-spotlight-image{height:190px;border-radius:13px;background:#252525;display:flex;align-items:center;justify-content:center;font-size:54px;overflow:hidden;border:1px solid #553719}
+.vip-spotlight-image img{width:100%;height:100%;object-fit:cover}
+.vip-spotlight-info h3{font-size:clamp(19px,3vw,27px);margin:9px 0;color:#fff}
+.vip-spotlight-info p{font-size:13px;color:#ccc;line-height:1.6}
+.vip-spotlight-price{font-size:19px;color:#22c55e;font-weight:900;margin:8px 0}
+.vip-spotlight-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:15px}
+.vip-spotlight-dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.vip-spotlight-dots button{width:8px;height:8px;border:0;border-radius:50%;padding:0;background:#666}
+.vip-spotlight-dots button.active{background:#ff7900;box-shadow:0 0 8px #ff7900}
+.vip-spotlight-empty{grid-column:1/-1;text-align:center;color:#bbb;padding:50px 10px}
+@media(max-width:560px){.vip-spotlight-content{grid-template-columns:1fr;gap:10px}.vip-spotlight-image{height:175px}.vip-spotlight-info{text-align:center}.vip-spotlight-controls .btn{padding:8px 9px;font-size:11px}}
+
+.vip-spotlight-actions{justify-content:center;flex-wrap:wrap;margin-top:14px}
+@media(max-width:560px){.vip-spotlight-actions .btn{flex:1 1 30%;min-width:90px}}
 </style>
 </head>
 
@@ -538,7 +559,7 @@ footer{background:#000;border-top-color:#333}
       <div class="future-ad-dots" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
     </div>
     <h1 class="boss-hero-title">24Adz.com</h1>
-    <button class="btn btn-orange post-main" onclick="openPostForm()">
+    <button class="btn btn-orange post-main" onclick="requireCustomerLogin()">
       ＋ Post Ad Free
     </button>
     <div class="hero-note">24Adz.com · Tamil Nadu Classifieds</div>
@@ -550,19 +571,16 @@ footer{background:#000;border-top-color:#333}
   </div>
 </section>
 
-<section class="welcome-brand-section" aria-label="Welcome to 24Adz.com">
-  <div class="container">
-    <div class="welcome-brand-card">
-      <div class="welcome-brand-kicker">WELCOME TO TAMIL NADU'S MARKETPLACE</div>
-      <h2 class="welcome-brand-title">24<span>Adz</span>.com</h2>
-      <p class="welcome-brand-tagline">BUY · SELL · CONNECT</p>
-      <p class="welcome-brand-copy">Your local marketplace to discover great deals, list what you sell, and connect with people across Tamil Nadu.</p>
-      <div class="welcome-brand-pills">
-        <span>🚗 Cars</span><span>🏍️ Bikes</span><span>📱 Mobiles</span>
-        <span>🏠 Houses</span><span>💼 Jobs</span><span>🚚 House Movers</span>
-      </div>
+<section class="vip-spotlight-section" aria-label="VIP advertisements">
+  <div class="container"><div class="vip-spotlight-box">
+    <div class="vip-spotlight-heading"><span>⭐ VIP SPOTLIGHT</span><span id="vipSpotlightCount">Featured Ads</span></div>
+    <div id="vipSpotlightContent" class="vip-spotlight-content"><div class="vip-spotlight-empty">VIP advertisements will appear here.</div></div>
+    <div class="vip-spotlight-controls">
+      <button type="button" class="btn btn-dark btn-small" id="vipSpotlightPrev">‹ Previous</button>
+      <div id="vipSpotlightDots" class="vip-spotlight-dots"></div>
+      <button type="button" class="btn btn-orange btn-small" id="vipSpotlightNext">Next ›</button>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <div class="scam">
@@ -608,7 +626,7 @@ footer{background:#000;border-top-color:#333}
       <h2>Search <span>Listings</span></h2>
       <div class="section-sub">Filter by keyword, category, district and area.</div>
     </div>
-    <button class="btn btn-orange" onclick="openPostForm()">＋ Post Ad</button>
+    <button class="btn btn-orange" onclick="requireCustomerLogin()">＋ Post Ad</button>
   </div>
 
   <div class="filters filters-collapsible">
@@ -624,8 +642,8 @@ footer{background:#000;border-top-color:#333}
         <label for="filterCategory">CATEGORY</label>
         <select id="filterCategory" onchange="renderAds()">
           <option value="">Categories</option>
-          <option>Cars</option><option>Bikes</option><option>House</option>
-          <option>Mobiles</option><option>Jobs</option><option>House Movers</option>
+          <option>Cars</option><option>Bikes</option><option>House</option><option>Mobiles</option>
+          <option>Jobs</option><option>House Movers</option>
         </select>
       </div>
       <div class="field">
@@ -666,7 +684,8 @@ footer{background:#000;border-top-color:#333}
   <div class="section-heading">
     <div>
       <h2 id="adResultsTitle">Ads <span>Listings</span></h2>
-      <div class="section-sub" id="adResultsSubtitle">Browse listings or choose a category and district to narrow the results.</div>
+      <div class="section-sub" id="adResultsSubtitle">Browse live listings and 25 clearly labelled sample demo ads; choose a category and district to narrow results.</div>
+      <div class="form-note" id="apiStatus" role="status" aria-live="polite">Connecting to 24Adz listings service…</div>
     </div>
   </div>
   <div id="adsGrid" class="ad-grid"></div>
@@ -698,7 +717,7 @@ footer{background:#000;border-top-color:#333}
         <li>Standard listing placement</li>
         <li>Expiry and renewal options</li>
       </ul>
-      <button class="btn btn-orange" style="width:100%" onclick="openPostForm()">Post Ad</button>
+      <button class="btn btn-orange" style="width:100%" onclick="requireCustomerLogin()">Post Ad</button>
     </div>
 
     <div class="plan featured">
@@ -710,7 +729,7 @@ footer{background:#000;border-top-color:#333}
         <li>VIP placement after payment verification</li>
         <li>Listing expiry control</li>
       </ul>
-      <button class="btn btn-gold" style="width:100%" onclick="startPaidPost(3)">Choose 3 Days</button>
+      <button class="btn btn-gold" style="width:100%" onclick="requireCustomerLogin()">Choose 3 Days</button>
     </div>
 
     <div class="plan">
@@ -722,7 +741,7 @@ footer{background:#000;border-top-color:#333}
         <li>VIP placement after payment verification</li>
         <li>Listing renewal option</li>
       </ul>
-      <button class="btn btn-orange" style="width:100%" onclick="startPaidPost(7)">Choose 7 Days</button>
+      <button class="btn btn-orange" style="width:100%" onclick="requireCustomerLogin()">Choose 7 Days</button>
     </div>
   </div>
 
@@ -811,7 +830,7 @@ footer{background:#000;border-top-color:#333}
 
         <div class="field">
           <label for="adArea">AREA *</label>
-          <input id="adArea" required maxlength="80" placeholder="Enter area">
+          <input id="adArea" required maxlength="80" placeholder="Select district first">
         </div>
 
         <div class="field">
@@ -827,6 +846,12 @@ footer{background:#000;border-top-color:#333}
         <div class="field">
           <label for="sellerWhatsApp">WHATSAPP NUMBER</label>
           <input id="sellerWhatsApp" type="tel" maxlength="15" placeholder="WhatsApp number">
+        </div>
+
+        <div class="field full">
+          <label for="adImageUrl">IMAGE URL (TEMPORARY)</label>
+          <input id="adImageUrl" type="url" placeholder="Image upload will be enabled after R2 upload API is added">
+          <p class="form-note">Secure photo upload needs the Cloudflare R2 upload route. Do not paste private or sensitive image links.</p>
         </div>
 
         <div class="field full">
@@ -863,7 +888,7 @@ footer{background:#000;border-top-color:#333}
         <button class="btn btn-orange" type="submit">Continue</button>
         <button class="btn btn-dark" type="button" onclick="closeModal('postModal')">Cancel</button>
       </div>
-      <p class="form-note">This version stores user listings in this browser only. A real public listing service requires the website API and database.</p>
+      <p class="form-note">Your ad is submitted to the secure 24Adz API. Public ad submission must be enabled in the Cloudflare Worker before listings can be saved online.</p>
     </form>
   </div>
 </div>
@@ -909,7 +934,7 @@ footer{background:#000;border-top-color:#333}
     <form id="loginForm">
       <div class="field"><label>EMAIL</label><input id="loginEmail" type="email" required></div><br>
       <div class="field"><label>PASSWORD</label><input id="loginPassword" type="password" required></div><br>
-      <div class="notice red">Login is not connected to a secure authentication service in this HTML version.</div>
+      <div class="notice red">Login is required before posting an ad. Secure customer authentication must be connected to the website API before accounts can sign in.</div>
       <div class="form-actions"><button class="btn btn-orange">Continue</button></div>
     </form>
   </div>
@@ -940,8 +965,8 @@ footer{background:#000;border-top-color:#333}
 <!-- CHAT -->
 <div class="modal" id="chatModal">
   <div class="modal-box">
-    <div class="modal-head"><h2>24Adz Chat</h2><button class="close-btn" onclick="closeModal('chatModal')">×</button></div>
-    <div class="notice">Local prototype chat. Messages are saved only in this browser and are not delivered to another user.</div>
+    <div class="modal-head"><h2 id="chatTitle">24Adz Chat</h2><button class="close-btn" onclick="closeModal('chatModal')">×</button></div>
+    <div class="notice" id="chatNotice">Select an advertisement to start a conversation. Live message delivery requires the secure chat API.</div>
     <div class="chat-messages" id="chatMessages"></div>
     <form id="chatForm">
       <input id="chatInput" placeholder="Type a message..." required maxlength="500">
@@ -1125,7 +1150,7 @@ const DEMO_PHOTOS = {
   "House Movers": "data:image/jpeg;base64,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"
 };
 function iconFor(category){
-  return {Cars:"🚗",Bikes:"🏍️",House:"🏠",Mobiles:"📱",Jobs:"💼","House Movers":"🚚"}[category]||"📦";
+  return {Cars:"🚗",Bikes:"🏍️",House:"🏠","House & Properties":"🏠",Mobiles:"📱",Laptops:"💻",Jobs:"💼","House Movers":"🚚"}[category]||"📦";
 }
 function toast(message){
   const el=document.getElementById("toast");
@@ -1223,7 +1248,7 @@ function renderCard(ad){
   } else if(isDemo){
     actions+='<button class="btn btn-whatsapp btn-small btn-demo-disabled" type="button" disabled title="Demo ad: real WhatsApp number is not available">WhatsApp</button>';
   }
-  actions+='<button class="btn btn-chat btn-small" onclick="openChat()">💬 Chat Messenger</button>';
+  actions+='<button class="btn btn-chat btn-small" type="button" data-chat-ad="'+escapeHTML(ad.id)+'">💬 Chat Messenger</button>';
 
   return `
   <article class="ad-card ${ad.vip&&!isDemo?"vip":""}">
@@ -1310,7 +1335,7 @@ const categoryFieldConfig={
     {id:"vehicleYear",label:"YEAR *",type:"number",min:1950,max:new Date().getFullYear()+1,required:true},
     {id:"vehicleKm",label:"KM DRIVEN *",type:"number",min:0,required:true}
   ],
-  "House":[
+  "House & Properties":[
     {id:"propertyPurpose",label:"RENT / SALE *",type:"select",options:["Rent","Sale"],required:true},
     {id:"propertyType",label:"PROPERTY TYPE *",type:"select",options:["House","Apartment / Flat","Plot / Land","Commercial Property","Other"],required:true},
     {id:"bedrooms",label:"BEDROOMS",type:"select",options:["Studio","1 BHK","2 BHK","3 BHK","4 BHK","5+ BHK","Not Applicable"],required:true}
@@ -1320,6 +1345,13 @@ const categoryFieldConfig={
     {id:"mobileModel",label:"MODEL *",placeholder:"e.g. Galaxy A55",required:true},
     {id:"mobileStorage",label:"STORAGE *",type:"select",options:["32 GB","64 GB","128 GB","256 GB","512 GB","1 TB","Other"],required:true},
     {id:"mobileCondition",label:"CONDITION *",type:"select",options:["New","Used"],required:true}
+  ],
+  "Laptops":[
+    {id:"laptopBrand",label:"BRAND *",placeholder:"e.g. Dell / HP / Lenovo",required:true},
+    {id:"laptopModel",label:"MODEL *",placeholder:"Model name",required:true},
+    {id:"laptopProcessor",label:"PROCESSOR",placeholder:"e.g. Intel Core i5"},
+    {id:"laptopRam",label:"RAM",type:"select",options:["4 GB","8 GB","16 GB","32 GB","64 GB","Other"]},
+    {id:"laptopStorage",label:"STORAGE",type:"select",options:["128 GB SSD","256 GB SSD","512 GB SSD","1 TB SSD","1 TB HDD","Other"]}
   ],
   "Jobs":[
     {id:"jobTitle",label:"JOB TITLE *",placeholder:"e.g. Sales Executive",required:true},
@@ -1349,7 +1381,7 @@ function renderCategoryFields(category,values={}){
   }).join("");
   wrap.classList.toggle("hidden",fields.length===0);
   const conditionField=document.getElementById("adCondition").closest(".field");
-  conditionField.classList.toggle("hidden",category==="Mobiles"||category==="House"||category==="Jobs"||category==="House Movers");
+  conditionField.classList.toggle("hidden",category==="Mobiles"||(category==="House"||category==="House & Properties")||category==="Jobs"||category==="House Movers");
   if(category==="Mobiles")document.getElementById("adCondition").value=values.mobileCondition||"Used";
 }
 function readCategoryDetails(category){
@@ -1578,7 +1610,21 @@ document.getElementById("adminForm").addEventListener("submit",e=>{
 });
 
 /* Local prototype chat only. */
+let activeChatAd=null;
 function openChat(){
+  activeChatAd=null;
+  document.getElementById("chatTitle").textContent="24Adz Chat";
+  document.getElementById("chatNotice").textContent="Local prototype only. Messages are saved in this browser and are not delivered until the secure chat API is connected.";
+  renderChat();openModal("chatModal");
+}
+function openAdChat(adId){
+  const live=(window.__24ADZ_LIVE_ADS||[]);
+  const local=(typeof getAllAds==="function"?getAllAds():[]);
+  const ad=[...live,...local].find(x=>String(x.id)===String(adId));
+  if(!ad){toast("This advertisement is no longer available. Refresh listings and try again.");return;}
+  activeChatAd=ad;
+  document.getElementById("chatTitle").textContent="Chat · "+String(ad.title||"Advertisement");
+  document.getElementById("chatNotice").textContent="Seller: "+String(ad.name||"Seller")+" · "+String(ad.area||"")+" "+String(ad.district||"")+". This chat is linked to the selected ad; live delivery requires the secure Worker chat API.";
   renderChat();openModal("chatModal");
 }
 function renderChat(){
@@ -1633,5 +1679,420 @@ renderAds();
 })();
 
 </script>
+
+<style>
+/* 24Adz homepage refresh */
+.category{min-height:142px}
+.category strong{line-height:1.3}
+.ad-card{transition:transform .18s ease,border-color .18s ease}
+.ad-card:hover{transform:translateY(-3px);border-color:#ff7900}
+.ad-card .new-tag{position:absolute;top:10px;right:10px;background:#22c55e;color:#061b0d;padding:5px 8px;border-radius:5px;font-size:10px;font-weight:1000}
+.ad-card .ad-price{display:block!important;color:#22c55e;font-weight:900;font-size:18px;margin:8px 0}
+.ad-card .ad-image img{object-fit:cover}
+.api-status{display:inline-flex;align-items:center;gap:7px;margin-top:8px;font-size:11px;color:#aaa}
+.api-status:before{content:"";width:7px;height:7px;border-radius:50%;background:#f59e0b}
+.api-status.online:before{background:#22c55e}
+.api-status.offline:before{background:#ef4444}
+.filter-advanced-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+@media(max-width:700px){.filter-advanced-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.filter-advanced-grid{grid-template-columns:1fr}}
+</style>
+<script>
+/* 24Adz API-first homepage layer.
+   Current API routes verified from the supplied Worker:
+   GET /api/health, /api/categories, /api/districts, /api/areas, /api/ads.
+   Public POST /api/ads, authentication, R2 upload and chat routes are NOT in that Worker yet.
+*/
+(() => {
+  "use strict";
+  const API_BASE = "https://api.24adz.com";
+  const API = {
+    health: "/api/health",
+    categories: "/api/categories",
+    districts: "/api/districts",
+    areas: "/api/areas",
+    ads: "/api/ads",
+    createAd: "/api/ads"
+  };
+  let liveAds = DEMO_ADS.map(a=>({...a,image:DEMO_PHOTOS[a.category]||'',showWhatsApp:false}));
+  let liveCategories = [];
+  let liveDistricts = [];
+  let liveAreas = [];
+  let apiReady = false;
+  let apiLoading = false;
+
+  const $ = id => document.getElementById(id);
+  const safe = v => String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+  const normalize = v => String(v || "").trim().toLowerCase().replace(/\s+/g," ");
+  const setStatus = (message, state="") => {
+    const el=$("apiStatus");
+    if(!el)return;
+    el.textContent=message;
+    el.className="form-note api-status "+state;
+  };
+  async function api(path, options={}) {
+    const response=await fetch(API_BASE+path,{
+      ...options,
+      headers:{"Content-Type":"application/json",...(options.headers||{})},
+      mode:"cors",
+      cache:"no-store"
+    });
+    let data={};
+    try{data=await response.json()}catch{}
+    if(!response.ok || data.ok===false) throw new Error(data.error || `HTTP ${response.status}`);
+    return data;
+  }
+  function categoryName(v){
+    const x=normalize(v);
+    if(x==="house"||x==="houses"||x==="properties"||x==="house properties"||x==="house & properties")return "House";
+    if(x==="laptop"||x==="laptops"||x==="computer"||x==="computers")return "Mobiles";
+    return String(v||"");
+  }
+  function mapAd(a){
+    const created=Date.parse(a.created_at||a.createdAt||"") || Date.now();
+    const expiry=Date.parse(a.expires_at||a.expiresAt||"");
+    return {
+      ...a,
+      id:String(a.id),
+      category:categoryName(a.category),
+      subcategory:a.subcategory||"",
+      title:a.title||"Untitled listing",
+      description:a.description||"",
+      price:Number(a.price||0),
+      image:a.image_url||a.image||"",
+      name:a.contact_name||a.name||"Seller",
+      phone:a.contact_phone||a.phone||"",
+      whatsapp:a.contact_phone||a.whatsapp||"",
+      showCall:!!(a.contact_phone||a.phone),
+      showWhatsApp:!!(a.whatsapp_enabled||a.whatsapp),
+      vip:!!(a.is_vip||a.vip),
+      demo:false,
+      createdAt:created,
+      expiresAt:expiry||null,
+      expiryDays:30
+    };
+  }
+  async function loadReferenceData(){
+    const [cats,districts]=await Promise.all([
+      api(API.categories),api(API.districts)
+    ]);
+    liveCategories=cats.categories||[];
+    liveDistricts=districts.districts||[];
+    populateCategoryControls();
+    populateDistrictControls();
+  }
+  function populateCategoryControls(){
+    const mainNames=["Cars","Bikes","House","Mobiles","Jobs","House Movers"];
+    const names=mainNames.filter(name=>liveCategories.some(c=>categoryName(c.name)===name));
+    const filter=$("filterCategory"), form=$("adCategory");
+    [filter,form].forEach((select,idx)=>{
+      if(!select)return;
+      const keep=select.value;
+      const first=idx===0?'<option value="">Categories</option>':'<option value="">Select Category</option>';
+      select.innerHTML=first+names.map(n=>`<option value="${safe(n)}">${safe(n)}</option>`).join("");
+      if(names.includes(keep))select.value=keep;
+    });
+    const host=document.querySelector("#categories .categories");
+    if(host && liveCategories.length){
+      const icons={"Cars":"🚗","Bikes":"🏍️","Mobiles":"📱","Laptops":"💻","House & Properties":"🏠","Jobs":"💼","House Movers":"🚚"};
+      host.innerHTML=names.map(name=>{
+        const c=liveCategories.find(x=>categoryName(x.name)===name);
+        const label=name==="House"?"House":name;
+        return `<button class="category" type="button" onclick="chooseCategory('${safe(label).replace(/'/g,"\\'")}',false)">
+          <span class="icon">${safe(c?.icon||icons[c?.name]||icons[label]||"📦")}</span>
+          <strong>${safe(label)}</strong><small>Browse ${safe(label)}</small>
+        </button>`;
+      }).join("");
+    }
+  }
+  function populateDistrictControls(){
+    const names=liveDistricts.map(d=>d.name);
+    const filter=$("filterDistrict"), form=$("adDistrict");
+    if(filter){
+      const keep=filter.value;
+      filter.innerHTML='<option value="">Tamil Nadu – All Districts</option>'+names.map(n=>`<option>${safe(n)}</option>`).join("");
+      if(names.includes(keep))filter.value=keep;
+    }
+    if(form){
+      const keep=form.value;
+      form.innerHTML='<option value="">Select District</option>'+names.map(n=>`<option>${safe(n)}</option>`).join("");
+      if(names.includes(keep))form.value=keep;
+    }
+  }
+  async function loadAreas(districtName, selectId){
+    const select=$(selectId);
+    if(!select)return;
+    const district=liveDistricts.find(d=>d.name===districtName);
+    select.innerHTML='<option value="">All Areas</option>';
+    if(!district)return;
+    try{
+      const data=await api(API.areas+"?district_id="+encodeURIComponent(district.id));
+      liveAreas=data.areas||[];
+      select.innerHTML='<option value="">All Areas</option>'+liveAreas.map(a=>`<option value="${safe(a.name)}">${safe(a.name)}</option>`).join("");
+    }catch(e){console.warn("Areas unavailable",e);}
+  }
+  async function loadListings(){
+    if(apiLoading)return;
+    apiLoading=true;
+    try{
+      const data=await api(API.ads);
+      liveAds=[...(data.ads||[]).map(mapAd),...DEMO_ADS.map(a=>({...a,image:'',showWhatsApp:false}))];
+      apiReady=true;
+      setStatus(`${(data.ads||[]).length} real listing(s) + 25 clearly labelled demo ads loaded.`, "online");
+    }catch(e){
+      apiReady=false;
+      setStatus("Listings API is not reachable. Check api.24adz.com and the Worker D1 binding.", "offline");
+      console.error("24Adz listings API:",e);
+    }finally{
+      apiLoading=false;
+      renderLiveAds();
+    }
+  }
+  function renderLiveAds(){
+    window.__24ADZ_LIVE_ADS=liveAds;
+    const q=($("searchInput")?.value||"").trim().toLowerCase();
+    const cat=categoryName($("filterCategory")?.value||"");
+    const subcat=$("filterSubcategory")?.value||"";
+    const dist=$("filterDistrict")?.value||"";
+    const area=$("filterArea")?.value||"";
+    const min=Number($("filterMinPrice")?.value||0);
+    const max=Number($("filterMaxPrice")?.value||0);
+    const sort=$("filterSort")?.value||"newest";
+    let ads=liveAds.filter(a=>{
+      const hay=[a.title,a.description,a.category,a.subcategory,a.district,a.area].join(" ").toLowerCase();
+      return (!q||hay.includes(q))&&(!cat||normalize(a.category)===normalize(cat))&&
+        (!subcat||normalize(a.subcategory)===normalize(subcat))&&
+        (!dist||normalize(a.district)===normalize(dist))&&(!area||normalize(a.area)===normalize(area))&&
+        (!min||a.price>=min)&&(!max||a.price<=max);
+    });
+    ads.sort((a,b)=>{
+      if(a.vip!==b.vip)return a.vip?-1:1;
+      if(sort==="price_low")return a.price-b.price;
+      if(sort==="price_high")return b.price-a.price;
+      return b.createdAt-a.createdAt;
+    });
+    const vip=ads.filter(a=>a.vip).slice(0,25);
+    const regular=ads.filter(a=>!a.vip).slice(0,Math.max(0,25-vip.length));
+    const vipGrid=$("vipGrid"), adsGrid=$("adsGrid");
+    if(vipGrid)vipGrid.innerHTML=vip.length?vip.map(renderLiveCard).join(""):'<div class="empty" style="grid-column:1/-1">No VIP ads at the moment.</div>';
+    if(adsGrid)adsGrid.innerHTML=regular.map(renderLiveCard).join("");
+    if($("vipListings"))$("vipListings").classList.toggle("hidden",!vip.length);
+    if($("emptyState"))$("emptyState").classList.toggle("hidden",ads.length>0);
+    if($("adResultsTitle"))$("adResultsTitle").innerHTML=(q||cat||dist||area||min||max)?'Matching <span>Ads</span>':'Latest <span>New Ads</span>';
+    if($("adResultsSubtitle"))$("adResultsSubtitle").textContent=`${ads.length} live result(s). VIP listings are shown first; newest standard ads follow.`;
+  }
+  function renderLiveCard(ad){
+    const rawPhone=String(ad.phone||"").replace(/[^\d]/g,"");
+    const phoneDigits=rawPhone.startsWith("91")&&rawPhone.length===12?rawPhone.slice(2):rawPhone;
+    const callHref=phoneDigits.length===10?`tel:+91${phoneDigits}`:"";
+    const waDigits=rawPhone.length===10?"91"+rawPhone:rawPhone;
+    const waHref=ad.showWhatsApp&&waDigits.length>=12?`https://wa.me/${waDigits}`:"";
+    const image=ad.image?`<img src="${safe(ad.image)}" alt="${safe(ad.title)}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`:`<span>${safe(({Cars:"🚗",Bikes:"🏍️",Mobiles:"📱",Laptops:"💻",House:"🏠","House & Properties":"🏠",Jobs:"💼","House Movers":"🚚"})[ad.category]||"📦")}</span>`;
+    const price=ad.price>0?`<div class="ad-price">${Number(ad.price).toLocaleString("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0})}</div>`:'<div class="ad-price">Price on request</div>';
+    const isDemo=!!ad.demo;
+    const call=callHref&&!isDemo?`<a class="btn btn-green btn-small" href="${callHref}">📞 Call</a>`:`<button class="btn btn-green btn-small btn-demo-disabled" type="button" disabled title="${isDemo?"Sample ad has no real seller number":"Seller phone number unavailable"}">📞 Call</button>`;
+    const wa=waHref&&!isDemo?`<a class="btn btn-whatsapp btn-small" target="_blank" rel="noopener noreferrer" href="${waHref}">WhatsApp</a>`:`<button class="btn btn-whatsapp btn-small btn-demo-disabled" type="button" disabled title="${isDemo?"Sample ad has no real WhatsApp number":"Seller has not enabled WhatsApp"}">WhatsApp</button>`;
+    const chat=`<button class="btn btn-chat btn-small" type="button" data-chat-ad="${safe(ad.id)}">💬 Chat Messenger</button>`;
+    const age=Math.max(0,Math.floor((Date.now()-ad.createdAt)/86400000));
+    return `<article class="ad-card ${ad.vip&&!isDemo?"vip":""}">
+      <div class="ad-image">${image}${ad.vip?'<span class="vip-tag">⭐ VIP</span>':'<span class="new-tag">NEW</span>'}${isDemo?'<span class="demo-tag">DEMO</span>':''}</div>
+      <div class="ad-body"><div class="ad-category">${safe(ad.category)}${ad.subcategory?' · '+safe(ad.subcategory):''}</div>
+      <div class="ad-title">${safe(ad.title)}</div>${price}
+      <div class="ad-meta">📍 ${safe(ad.area||"")} ${safe(ad.district||"")}<br>🕒 ${age===0?"Today":age+" day(s) ago"}</div>
+      <div class="ad-description">${safe(ad.description).slice(0,240)}</div>
+      <div class="ad-meta">Posted by: ${safe(ad.name)}${isDemo?' · SAMPLE ONLY':''}</div>
+      ${isDemo?'<div class="form-note">Sample listing only. Not a real offer.</div>':""}
+      <div class="ad-actions">${call}${wa}${chat}</div></div></article>`;
+  }
+  // Add advanced search controls without breaking the existing mobile filter panel.
+  const extra=$("extraFilters");
+  if(extra && !$("filterMinPrice")){
+    const block=document.createElement("div");
+    block.className="filter-advanced-grid";
+    block.innerHTML=`
+      <div class="field"><label for="filterMinPrice">MIN PRICE (₹)</label><input id="filterMinPrice" type="number" min="0" placeholder="0"></div>
+      <div class="field"><label for="filterMaxPrice">MAX PRICE (₹)</label><input id="filterMaxPrice" type="number" min="0" placeholder="No limit"></div>
+      <div class="field"><label for="filterSort">SORT BY</label><select id="filterSort"><option value="newest">Newest first</option><option value="price_low">Price: Low to High</option><option value="price_high">Price: High to Low</option></select></div>
+      <div class="field"><label for="filterSubcategory">SUBCATEGORY</label><select id="filterSubcategory"><option value="">All subcategories</option></select></div>`;
+    extra.appendChild(block);
+    ["filterMinPrice","filterMaxPrice","filterSort","filterSubcategory"].forEach(id=>$(id).addEventListener("change",renderLiveAds));
+  }
+
+  // The supplied Worker does not currently expose a public POST /api/ads route.
+  // Stop the browser-local prototype handler and never claim an ad was published.
+  const postForm=$("postForm");
+  if(postForm)postForm.addEventListener("submit",async e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+    const phone=String($("sellerPhone")?.value||"").replace(/\D/g,"").replace(/^91/,"");
+    if(!/^[6-9]\d{9}$/.test(phone)){toast("Enter a valid 10-digit Indian mobile number.");return;}
+    if(!apiReady){toast("Website API connection is not ready. Please try again later.");return;}
+    const category=liveCategories.find(c=>c.name===categoryName($("adCategory").value));
+    const district=liveDistricts.find(d=>d.name===$("adDistrict").value);
+    if(!category||!district){toast("Choose a valid category and district.");return;}
+    const payload={
+      title:$("adTitle").value.trim(),description:$("adDescription").value.trim(),
+      category_id:category.id,district_id:district.id,price:Number($("adPrice").value||0),
+      price_type:"fixed",image_url:$("adImageUrl")?.value.trim()||"",
+      contact_name:$("sellerName").value.trim(),contact_phone:phone,
+      whatsapp_enabled:$("showWhatsApp").checked,
+      subcategory_id:$("adSubcategory")?.value ? Number($("adSubcategory").value) : null,
+      area_id:liveAreas.find(a=>a.name===($("adAreaSelect")?.value||""))?.id || null,
+      status:"pending"
+    };
+    try{
+      await api(API.createAd,{method:"POST",body:JSON.stringify(payload)});
+      closeModal("postModal");toast("Ad submitted. It will appear after moderation.");
+      await loadListings();
+    }catch(err){
+      toast("Public ad-post API is not enabled in Worker yet. No ad was saved.");
+      console.error("Post ad route unavailable:",err);
+    }
+  },true);
+
+  // Keep the existing UI actions but clearly state which backend routes are not implemented.
+  const register=$("registerForm");
+  if(register)register.addEventListener("submit",e=>{
+    e.preventDefault();toast("Account registration API is not yet enabled in the Worker.");
+  },true);
+  const login=$("loginForm");
+  if(login)login.addEventListener("submit",e=>{
+    e.preventDefault();toast("Secure customer login API is not yet enabled in the Worker.");
+  },true);
+  if(typeof window.openChat==="function"){
+    const oldChat=window.openChat;
+    window.openChat=function(){toast("Private chat API is not yet connected.");};
+  }
+
+  // API-driven area dropdowns and filter refresh.
+  $("filterDistrict")?.addEventListener("change",async()=>{
+    await loadAreas($("filterDistrict").value,"filterArea");
+    renderLiveAds();
+  });
+  $("adDistrict")?.addEventListener("change",async()=>{
+    const old=$("adArea").value;
+    await loadAreas($("adDistrict").value,"adAreaSelect");
+  });
+  $("searchInput")?.addEventListener("input",renderLiveAds);
+  $("filterCategory")?.addEventListener("change",()=>{
+    const chosen=liveCategories.find(c=>c.name===categoryName($("filterCategory").value));
+    const sub=$("filterSubcategory");
+    if(sub)sub.innerHTML='<option value="">All subcategories</option>'+(chosen?.subcategories||[]).map(x=>`<option>${safe(x.name)}</option>`).join("");
+    renderLiveAds();
+  });
+  $("filterArea")?.addEventListener("change",renderLiveAds);
+  $("filterMinPrice")?.addEventListener("input",renderLiveAds);
+  $("filterMaxPrice")?.addEventListener("input",renderLiveAds);
+
+  // Convert the area text input to a district-linked dropdown.
+  const areaInput=$("adArea");
+  if(areaInput){
+    const select=document.createElement("select");
+    select.id="adAreaSelect";select.required=true;
+    select.innerHTML='<option value="">Select area</option>';
+    areaInput.parentNode.replaceChild(select,areaInput);
+  }
+  window.chooseCategory=(category,openForm)=>{
+    if(openForm){window.requireCustomerLogin();return;}
+    $("filterCategory").value=categoryName(category);
+    $("searchInput").value="";
+    renderLiveAds();
+    $("adResultsSection").scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  window.clearFilters=()=>{
+    $("searchInput").value="";$("filterCategory").value="";
+    $("filterDistrict").value="";$("filterArea").innerHTML='<option value="">All Areas</option>';
+    $("filterMinPrice")&&($("filterMinPrice").value="");
+    $("filterMaxPrice")&&($("filterMaxPrice").value="");
+    renderLiveAds();
+  };
+  window.renderAds=renderLiveAds;
+
+  // Add category/subcategory selection to the post form, driven by admin-managed categories.
+  const catSelect=$("adCategory");
+  if(catSelect)catSelect.addEventListener("change",()=>{
+    const chosen=liveCategories.find(c=>c.name===catSelect.value);
+    let sub=$("adSubcategory");
+    if(!sub){
+      const wrap=document.createElement("div");wrap.className="field";
+      wrap.innerHTML='<label for="adSubcategory">SUBCATEGORY</label><select id="adSubcategory"><option value="">Select subcategory</option></select>';
+      catSelect.closest(".field").insertAdjacentElement("afterend",wrap);
+      sub=$("adSubcategory");
+    }
+    const subs=chosen?.subcategories||[];
+    sub.innerHTML='<option value="">Select subcategory</option>'+subs.map(x=>`<option value="${x.id}">${safe(x.name)}</option>`).join("");
+  });
+
+  let vipSpotlightAds=[],vipSpotlightIndex=0;
+  function renderVipSpotlight(){
+    const box=$("vipSpotlightContent"),count=$("vipSpotlightCount"),dots=$("vipSpotlightDots");
+    if(!box)return;
+    if(!vipSpotlightAds.length){box.innerHTML='<div class="vip-spotlight-empty">No VIP ads yet. VIP ads will appear here after verification.</div>';if(count)count.textContent="0 VIP Ads";if(dots)dots.innerHTML="";return;}
+    vipSpotlightIndex=(vipSpotlightIndex+vipSpotlightAds.length)%vipSpotlightAds.length;
+    const ad=vipSpotlightAds[vipSpotlightIndex];
+    const icons={Cars:"🚗",Bikes:"🏍️",Mobiles:"📱",Laptops:"💻","House & Properties":"🏠",House:"🏠",Jobs:"💼","House Movers":"🚚"};
+    const price=Number(ad.price)>0?Number(ad.price).toLocaleString("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}):"Price on request";
+    box.innerHTML=`<div class="vip-spotlight-image">${(ad.image||DEMO_PHOTOS[ad.category])?`<img src="${safe(ad.image||DEMO_PHOTOS[ad.category])}" alt="${safe(ad.title)}">`:(icons[ad.category]||"📦")}</div>
+      <div class="vip-spotlight-info"><span class="vip-tag">⭐ VIP ${ad.demo?"DEMO":"FEATURED"}</span><h3>${safe(ad.title)}</h3>
+      <div class="vip-spotlight-price">${price}</div><p>${safe(ad.description||"Featured listing on 24Adz.com").slice(0,220)}</p>
+      <p>📍 ${safe(ad.area||"")} ${safe(ad.district||"")} · ${safe(ad.category||"")}</p>
+      ${ad.demo?'<small style="color:#ffb45b">Sample advertisement only — not a real seller offer.</small>':""}
+      <div class="ad-actions vip-spotlight-actions">
+        ${ad.phone&&!ad.demo?`<a class="btn btn-green btn-small" href="tel:${safe(ad.phone)}">📞 Call</a>`:'<button class="btn btn-green btn-small btn-demo-disabled" disabled>📞 Call</button>'}
+        ${ad.showWhatsApp&&ad.phone&&!ad.demo?`<a class="btn btn-whatsapp btn-small" target="_blank" rel="noopener noreferrer" href="https://wa.me/${String(ad.phone).replace(/\D/g,"")}">WhatsApp</a>`:'<button class="btn btn-whatsapp btn-small btn-demo-disabled" disabled>WhatsApp</button>'}
+        <button class="btn btn-chat btn-small" type="button" data-chat-ad="${safe(ad.id)}">💬 Chat Messenger</button>
+      </div></div>`;
+    if(count)count.textContent=`${vipSpotlightIndex+1} / ${vipSpotlightAds.length}`;
+    if(dots)dots.innerHTML=vipSpotlightAds.map((_,i)=>`<button type="button" class="${i===vipSpotlightIndex?"active":""}" aria-label="Show VIP ad ${i+1}" data-vip-index="${i}"></button>`).join("");
+  }
+  function refreshVipSpotlight(){vipSpotlightAds=liveAds.filter(a=>a.vip).sort((a,b)=>b.createdAt-a.createdAt);vipSpotlightIndex=0;renderVipSpotlight();}
+  $("vipSpotlightPrev")?.addEventListener("click",()=>{vipSpotlightIndex--;renderVipSpotlight();});
+  $("vipSpotlightNext")?.addEventListener("click",()=>{vipSpotlightIndex++;renderVipSpotlight();});
+  $("vipSpotlightDots")?.addEventListener("click",e=>{const b=e.target.closest("[data-vip-index]");if(b){vipSpotlightIndex=Number(b.dataset.vipIndex);renderVipSpotlight();}});
+  document.addEventListener("click",e=>{
+    const button=e.target.closest("[data-chat-ad]");
+    if(button)openAdChat(button.getAttribute("data-chat-ad"));
+  });
+  const baseRenderLiveAds=renderLiveAds;
+  renderLiveAds=function(){baseRenderLiveAds();refreshVipSpotlight();};
+  refreshVipSpotlight();
+  let vipAutoTimer=null;
+  function startVipAutoRotation(){
+    if(vipAutoTimer)clearInterval(vipAutoTimer);
+    vipAutoTimer=setInterval(()=>{
+      if(vipSpotlightAds.length>1){vipSpotlightIndex=(vipSpotlightIndex+1)%vipSpotlightAds.length;renderVipSpotlight();}
+    },2000);
+  }
+  startVipAutoRotation();
+
+  async function init(){
+    try{
+      await api(API.health);
+      await loadReferenceData();
+      await loadListings();
+     }catch(e){
+      // Keep the 25 sample cards visible even while the real API is offline.
+      liveAds=DEMO_ADS.map(a=>({...a,image:DEMO_PHOTOS[a.category]||'',showWhatsApp:false}));
+      setStatus("Demo mode: 25 sample ads are displayed. Real ads will load when the API is connected.", "offline");
+      console.error(e);
+      renderLiveAds();
+    }
+  }
+  window.requireCustomerLogin=function(){
+    const token=window.localStorage.getItem("24adz_customer_session");
+    if(!token){closeModal("postModal");openModal("loginModal");toast("Please login or create an account before posting an ad.");return;}
+    openPostForm();
+  };
+  const loginGate=$("loginForm");
+  if(loginGate)loginGate.addEventListener("submit",e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+    toast("Customer login API is not connected yet. Login cannot be verified until the secure backend is added.");
+  },true);
+  init();
+  window.addEventListener("focus",loadListings);
+})();
+</script>
+
 </body>
 </html>
